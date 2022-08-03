@@ -8,30 +8,20 @@ type ProviderProps = {
   children: React.ReactNode;
 };
 
-// class CurrentUserProvider extends React.Component<ProviderProps> {
-//   constructor(props: ProviderProps) {
-//     super(props);
-//     this.state = {
-//       currentUser: {},
-//       authLoading: false
-//     };
-//   }
-
-//   setCurrentUser() {
-
-//   }
-
-//   render() {
-//     return <div />;
-//   }
-// }
-
 const CurrentUserProvider: React.FC<ProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<UserType | null>();
   const [authLoading, setAuthLoading] = useState(false);
 
   const checkLogin = () => {
-    console.log("checkLogin");
+    const token = localStorage.getItem("dog_breed_token");
+    setAuthLoading(true);
+
+    if (token) {
+      // CALL NEXT PAGE
+    } else {
+      setAuthLoading(false);
+      setCurrentUser(null);
+    }
   };
 
   const handleLogout = () => {
@@ -62,4 +52,4 @@ const CurrentUserProvider: React.FC<ProviderProps> = ({ children }) => {
   );
 };
 
-export default CurrentUserProvider;
+export { CurrentUserProvider, CurrentUserContext };

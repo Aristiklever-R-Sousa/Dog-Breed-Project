@@ -1,39 +1,25 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
+import React, { useContext } from "react";
 import "./App.scss";
-import CurrentUserProvider from "./context/CurrentUserContext";
+import { CurrentUserContext } from "./context/CurrentUserContext";
+import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 
-function App() {
-  // const [count, setCount] = useState(0);
+const App: React.FC = () => {
+  const userContext = useContext(CurrentUserContext);
 
-  return (
-    <CurrentUserProvider>
-      <Login />
-      {/* <div className="App">
-        <div>
-          <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-            <img src="/vite.svg" className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </div> */}
-    </CurrentUserProvider>
-  );
-}
+  const content = () => {
+    console.log(userContext);
+    if (userContext !== null) {
+      if (userContext.authLoading) {
+        return <div>Charging...</div>;
+      }
+      if (!userContext.currentUser) return <Login />;
+      return <Home />;
+    }
+    return <Login />;
+  };
+
+  return content();
+};
 
 export default App;

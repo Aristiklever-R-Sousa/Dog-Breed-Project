@@ -1,15 +1,11 @@
 export type UserType = {
   email: string;
+  idLogin: string;
+  tokenLogin: string;
 };
-
-export type DataLogin = {
-  id: string;
-  token: string;
-}
 
 export type UserContextType = {
   currentUser?: UserType | null;
-  dataLogin?: DataLogin;
   authLoading: boolean;
   setCurrentUser: (user: UserType) => void;
   checkLogin: () => void;
