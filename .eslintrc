@@ -34,10 +34,21 @@
       2,
       { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
     ],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": ["function-declaration", "arrow-function"]
+      }
+    ],
+    "no-unused-vars": [
+      "error",
+      { "args": "none", "ignoreRestSiblings": false }
+    ],
     "no-shadow": "off",
     "space-before-function-paren": "off",
+    "react/prefer-stateless-function": "off",
     "no-console": "warn",
-    "comma-dangle": ["warn", { "objects": "always" }],
+    "comma-dangle": ["off", { "objects": "always" }],
     "jsx-quotes": ["error", "prefer-double"],
     "import/extensions": [
       "error",
