@@ -1,7 +1,10 @@
 export type UserType = {
-  email: string;
-  idLogin: string;
-  tokenLogin: string;
+  email?: string;
+  _id: string;
+  token: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: 0;
 };
 
 export type UserContextType = {

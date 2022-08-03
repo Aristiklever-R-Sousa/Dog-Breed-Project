@@ -1,6 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { useState, useEffect, useMemo } from "react";
 import { UserContextType, UserType } from "../types/User";
+import Client from "../common/api";
 
 const CurrentUserContext = React.createContext<UserContextType | null>(null);
 
@@ -17,15 +18,30 @@ const CurrentUserProvider: React.FC<ProviderProps> = ({ children }) => {
     setAuthLoading(true);
 
     if (token) {
-      // CALL NEXT PAGE
+      // REDIRECT FOR NEXT PAGE
     } else {
+      Client.post("/register", null, {
+        headers: {
+          email: "kleversousa13@gmail.com",
+        },
+      }).then((res: { data: { user: UserType } }) => {
+        const { user } = res.data;
+        console.log(user, "IN CHECK");
+        setAuthLoading(false);
+
+        if (user) {
+          setCurrentUser(user);
+          // STORING THE TOKEN RETURNED FOR THE ENDPOINT
+          localStorage.setItem("dog_breed_token", user.token);
+        }
+      });
+
       setAuthLoading(false);
-      setCurrentUser(null);
     }
   };
 
   const handleLogout = () => {
-    // Remover user from local storage to log user out
+    localStorage.removeItem("dog_breed_token");
     setCurrentUser(null);
   };
 
