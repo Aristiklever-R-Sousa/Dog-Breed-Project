@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { UserContextType, UserType } from "../types/User";
 import Client from "../common/api";
 
-const CurrentUserContext = React.createContext<UserContextType | null>(null);
+const CurrentUserContext = React.createContext<UserContextType>({});
 
 type ProviderProps = {
   children: React.ReactNode;

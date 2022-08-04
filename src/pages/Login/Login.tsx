@@ -1,4 +1,6 @@
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Client from "../../common/api";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { UserType } from "../../types/User";
@@ -6,7 +8,8 @@ import { UserType } from "../../types/User";
 import "./login.scss";
 
 const Login: React.FC = () => {
-  const userContext = useContext(CurrentUserContext);
+  const navigate = useNavigate();
+  const { setCurrentUser } = useContext(CurrentUserContext);
   const [email, setEmail] = useState<string>("");
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
@@ -26,16 +29,22 @@ const Login: React.FC = () => {
     })
       .then((res: { data: { user: UserType } }) => {
         const { user } = res.data;
-        user.email = email;
+        const redirectTo = {
+          route: "",
+        };
 
         console.log(user, "REQUISITION");
 
         if (user) {
-          if (userContext) userContext.setCurrentUser(user);
+          if (setCurrentUser) setCurrentUser(user);
+          else console.log("CurrentUser Indefined");
           // STORING THE TOKEN RETURNED FOR THE ENDPOINT
           localStorage.setItem("dog_breed_token", user.token);
+          redirectTo.route = "/dogList";
         } else handleError("An error ocurred");
         setIsSubmiting(false);
+        navigate("/dogList");
+        // if (redirectTo.route) navigate(redirectTo.route);
       })
       .catch((err) => {
         handleError("An erro ocurred (log in console).");
