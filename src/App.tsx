@@ -9,7 +9,7 @@ import "./App.scss";
 const App: React.FC = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Login />} />
       <Route path="login" element={<Login />} />
       <Route path="dogList" element={<Home />}>
         <Route path=":breed" element={<Home />} />

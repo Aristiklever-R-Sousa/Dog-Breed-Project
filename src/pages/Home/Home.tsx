@@ -19,10 +19,6 @@ const Home: React.FC = () => {
   });
   const optionsBreed = ["chihuahua", "husky", "pug", "labrador"];
 
-  const checkLogin = () => {
-    if (!token) navigate("/login");
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("dog_breed_token");
     navigate("/login");
@@ -43,8 +39,6 @@ const Home: React.FC = () => {
   };
 
   useEffect(handleBreed, [dataBreed.breed]);
-
-  checkLogin();
 
   // TODO: DESENVOLVER OS CARDS PARA VISUALIZAÇÃO DAS IMAGENS
 

@@ -1,15 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Client from "../../common/api";
-import { CurrentUserContext } from "../../context/CurrentUserContext";
+// import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { UserType } from "../../types/User";
 
 import "./login.scss";
+import imageLoad from "../../assets/react.svg";
 
 const Login: React.FC = () => {
+  const token = localStorage.getItem("dog_breed_token");
+
   const navigate = useNavigate();
-  const { setCurrentUser } = useContext(CurrentUserContext);
+  // const { setCurrentUser } = useContext(CurrentUserContext);
+
   const [email, setEmail] = useState<string>("");
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
@@ -29,22 +33,18 @@ const Login: React.FC = () => {
     })
       .then((res: { data: { user: UserType } }) => {
         const { user } = res.data;
-        const redirectTo = {
-          route: "",
-        };
 
-        console.log(user, "REQUISITION");
+        console.log(user, "IN REQUISITION");
 
         if (user) {
-          if (setCurrentUser) setCurrentUser(user);
-          else console.log("CurrentUser Indefined");
+          // if (setCurrentUser) setCurrentUser(user);
+          // else console.log("CurrentUser Indefined");
           // STORING THE TOKEN RETURNED FOR THE ENDPOINT
           localStorage.setItem("dog_breed_token", user.token);
-          redirectTo.route = "/dogList";
+
+          setIsSubmiting(false);
+          navigate("/dogList");
         } else handleError("An error ocurred");
-        setIsSubmiting(false);
-        navigate("/dogList");
-        // if (redirectTo.route) navigate(redirectTo.route);
       })
       .catch((err) => {
         handleError("An erro ocurred (log in console).");
@@ -52,6 +52,12 @@ const Login: React.FC = () => {
         setIsSubmiting(false);
       });
   };
+
+  const checkLogin = () => {
+    if (token) navigate("/dogList");
+  };
+
+  useEffect(checkLogin, [token]);
 
   return (
     <div className="container">
@@ -77,7 +83,11 @@ const Login: React.FC = () => {
           </div>
         </fieldset>
       </form>
-      {isSubmiting && <span>Está submetendo</span>}
+      {isSubmiting && (
+        <div className="loading-box">
+          <img src={imageLoad} alt="Loading" />
+        </div>
+      )}
     </div>
   );
 };
