@@ -1,11 +1,14 @@
-.container-home div {
+.container-home > div {
+  margin: 40px 0;
+
   display: flex;
 
   text-align: center;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
 
   h1 {
-    margin: 20px auto;
+    margin: 0 auto;
   }
 }

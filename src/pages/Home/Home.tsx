@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Client from "../../common/api";
+import Card from "../../components/Card/Card";
 
 import "./style.scss";
 
 type ResponseType = {
   breed: String;
-  list: String[];
+  list?: string[];
 };
 
 const Home: React.FC = () => {
   const token = localStorage.getItem("dog_breed_token") || "";
   const navigate = useNavigate();
 
-  const [breed, setBreed] = useState("");
+  const [dataBreed, setDataBreed] = useState<ResponseType>({
+    breed: "",
+  });
   const optionsBreed = ["chihuahua", "husky", "pug", "labrador"];
 
   const checkLogin = () => {
@@ -26,19 +29,20 @@ const Home: React.FC = () => {
   };
 
   const handleBreed = () => {
-    Client.get(`/list`, {
+    Client.get("/list", {
       headers: {
         Authorization: token,
       },
       params: {
-        breed,
+        breed: dataBreed.breed,
       },
     }).then((res: { data: ResponseType }) => {
-      console.log(res.data.breed, res.data.list);
+      setDataBreed({ ...dataBreed, list: res.data.list });
+      // console.log(dataBreed);
     });
   };
 
-  useEffect(handleBreed, [breed]);
+  useEffect(handleBreed, [dataBreed.breed]);
 
   checkLogin();
 
@@ -55,7 +59,7 @@ const Home: React.FC = () => {
             key={key}
             type="button"
             value={option}
-            onClick={(e) => setBreed(e.currentTarget.value)}
+            onClick={(e) => setDataBreed({ breed: e.currentTarget.value })}
           >
             {option}
           </button>
@@ -63,6 +67,11 @@ const Home: React.FC = () => {
         <button type="button" onClick={handleLogout}>
           Sair
         </button>
+      </div>
+      <div className="container-cards">
+        {dataBreed.list?.map((img, key) => (
+          <Card key={key} urlImage={img} />
+        ))}
       </div>
     </div>
   );

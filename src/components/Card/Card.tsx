@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./style.scss";
+
 type CardType = {
   urlImage: string;
 };
@@ -7,7 +9,8 @@ type CardType = {
 const Card: React.FC<CardType> = ({ urlImage }) => (
   <div className="card-box">
     Im a card!
-    <br /> Image in: {urlImage}
+    <br />
+    <img src={urlImage} alt="Dog" />
   </div>
 );
 
