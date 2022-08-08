@@ -7,33 +7,54 @@ type CardType = {
 };
 
 const Card: React.FC<CardType> = ({ urlImage }) => {
-  const handleImage = (button: HTMLButtonElement) => {
+  const handleImageInCenter = (pDiv: HTMLElement, pDivParent: HTMLElement) => {
+    const div = pDiv;
+    if (div.style.transform) {
+      div.style.transform = "";
+      div.classList.remove("active");
+
+      return;
+    }
+    const divParent = pDivParent;
+
+    const parentDimenssions = divParent.getBoundingClientRect();
+    const divDimessions = div.getBoundingClientRect();
+
+    const centerDiv = {
+      x: parentDimenssions.left + parentDimenssions.width * 0.5,
+      y: window.screen.height * 0.44,
+    };
+
+    const valueChange = {
+      x: centerDiv.x - divDimessions.left - divDimessions.width * 0.5,
+      y: centerDiv.y - divDimessions.top - divDimessions.height * 0.5,
+    };
+
+    div.style.transform = `translate(${valueChange.x}px, ${valueChange.y}px) scale(2)`;
+
+    div.classList.add("active");
+  };
+
+  const handleDarkScreenInBack = () => {
+    const divDarkScreen = document.getElementById("dark-screen");
+    const entireHtml = document.getElementsByTagName("html").item(0);
+
+    if (divDarkScreen && entireHtml) {
+      entireHtml.classList.toggle("visible-overflow");
+      divDarkScreen.classList.toggle("show-element");
+      divDarkScreen.style.top = `${window.scrollY}px`;
+    }
+  };
+
+  const handleImageZoom = (button: HTMLButtonElement) => {
     const div = button.parentElement;
     if (div) {
-      if (div.style.transform) div.style.transform = "";
-      else {
-        const divParent = div.parentElement;
-        if (divParent) {
-          const parentDimenssions = divParent.getBoundingClientRect();
-          const divDimessions = div.getBoundingClientRect();
+      const divParent = div.parentElement;
 
-          const centerDiv = {
-            x: parentDimenssions.left + parentDimenssions.width * 0.5,
-            y: window.screen.height * 0.44,
-          };
+      if (divParent) {
+        handleImageInCenter(div, divParent);
 
-          console.log({
-            centerDivX: centerDiv.x,
-            centerDivY: centerDiv.y,
-          });
-
-          const valueChange = {
-            x: centerDiv.x - divDimessions.left - divDimessions.width * 0.5,
-            y: centerDiv.y - divDimessions.top - divDimessions.height * 0.5,
-          };
-
-          div.style.transform = `translate(${valueChange.x}px, ${valueChange.y}px) scale(2)`;
-        }
+        handleDarkScreenInBack();
       }
     }
   };
@@ -43,7 +64,7 @@ const Card: React.FC<CardType> = ({ urlImage }) => {
       <button
         type="button"
         className="container-img"
-        onClick={(e) => handleImage(e.currentTarget)}
+        onClick={(e) => handleImageZoom(e.currentTarget)}
       >
         <img src={urlImage} alt="Dog" />
       </button>

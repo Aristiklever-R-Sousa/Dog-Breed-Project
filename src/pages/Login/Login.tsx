@@ -76,7 +76,7 @@ const Login: React.FC = () => {
               />
             </div>
             <div className="box-element">
-              <button type="submit" value="Entrar">
+              <button type="submit" value="Entrar" className="nav-button">
                 Entrar
               </button>
             </div>

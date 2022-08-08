@@ -32,3 +32,24 @@
     outline: 4px auto -webkit-focus-ring-color;
   }
 }
+
+div.show-element {
+  display: block !important;
+}
+
+.visible-overflow {
+  overflow-y: hidden;
+}
+
+div#dark-screen {
+  display: none;
+
+  position: absolute;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: #00000098;
+  z-index: 9;
+}

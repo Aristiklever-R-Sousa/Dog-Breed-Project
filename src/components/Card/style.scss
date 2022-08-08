@@ -9,7 +9,9 @@ $borderRadius: 5px;
   color: black;
 
   border-radius: $borderRadius;
-  transition: transform 0.2s;
+  transition: transform 0.2s, z-index 0.2s;
+
+  z-index: 8;
 
   button.container-img {
     width: 200px;
@@ -28,5 +30,5 @@ $borderRadius: 5px;
 }
 
 .active {
-  transform: scale(1.8) translate(50%, 50%);
+  z-index: 10;
 }

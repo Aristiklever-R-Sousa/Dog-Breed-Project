@@ -6,7 +6,7 @@ import Card from "../../components/Card/Card";
 import "./style.scss";
 
 type ResponseType = {
-  breed: String;
+  breed: string;
   list?: string[];
 };
 
@@ -43,32 +43,35 @@ const Home: React.FC = () => {
   // TODO: DESENVOLVER OS CARDS PARA VISUALIZAÇÃO DAS IMAGENS
 
   return (
-    <div className="container-home">
-      <div>
-        <h1>HELLO, YOU ARE LOGUED!</h1>
-      </div>
-      <div>
-        {optionsBreed.map((option, key) => (
-          <button
-            key={key}
-            type="button"
-            className="nav-button"
-            value={option}
-            onClick={(e) => setDataBreed({ breed: e.currentTarget.value })}
-          >
-            {option}
+    <>
+      <div id="dark-screen" />
+      <div className="container-home">
+        <div>
+          <h1>HELLO, YOU ARE LOGUED!</h1>
+        </div>
+        <div>
+          {optionsBreed.map((option, key) => (
+            <button
+              key={key}
+              type="button"
+              className="nav-button"
+              value={option}
+              onClick={(e) => setDataBreed({ breed: e.currentTarget.value })}
+            >
+              {option}
+            </button>
+          ))}
+          <button type="button" className="nav-button" onClick={handleLogout}>
+            Sair
           </button>
-        ))}
-        <button type="button" className="nav-button" onClick={handleLogout}>
-          Sair
-        </button>
+        </div>
+        <div className="container-cards">
+          {dataBreed.list?.map((img, key) => (
+            <Card key={key} urlImage={img} />
+          ))}
+        </div>
       </div>
-      <div className="container-cards">
-        {dataBreed.list?.map((img, key) => (
-          <Card key={key} urlImage={img} />
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 
