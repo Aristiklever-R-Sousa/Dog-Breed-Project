@@ -52,13 +52,14 @@ const Home: React.FC = () => {
           <button
             key={key}
             type="button"
+            className="nav-button"
             value={option}
             onClick={(e) => setDataBreed({ breed: e.currentTarget.value })}
           >
             {option}
           </button>
         ))}
-        <button type="button" onClick={handleLogout}>
+        <button type="button" className="nav-button" onClick={handleLogout}>
           Sair
         </button>
       </div>
