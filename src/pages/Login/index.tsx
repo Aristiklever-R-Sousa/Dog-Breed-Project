@@ -5,7 +5,7 @@ import Client from "../../common/api";
 // import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { UserType } from "../../types/User";
 
-import "./login.scss";
+import "./style.scss";
 import imageLoad from "../../assets/react.svg";
 
 const Login: React.FC = () => {
@@ -63,8 +63,9 @@ const Login: React.FC = () => {
     <div className="container">
       <form method="POST" onSubmit={handleRequisition}>
         <fieldset>
-          <legend>Formulário aqui</legend>
+          {/* <legend>Formulário aqui</legend> */}
           <div className="form-content">
+            <h2>Entrar</h2>
             <div className="box-element">
               <label htmlFor="email">Email</label>
               <br />

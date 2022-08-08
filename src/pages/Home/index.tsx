@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Client from "../../common/api";
-import Card from "../../components/Card/Card";
+import Card from "../../components/Card";
 
 import "./style.scss";
 
@@ -18,6 +18,13 @@ const Home: React.FC = () => {
     breed: "",
   });
   const optionsBreed = ["chihuahua", "husky", "pug", "labrador"];
+
+  const handleLogin = () => {
+    if (!token) {
+      alert("Entre no sistema primeito!");
+      navigate("/login");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("dog_breed_token");
@@ -38,6 +45,7 @@ const Home: React.FC = () => {
     });
   };
 
+  useEffect(handleLogin, [token]);
   useEffect(handleBreed, [dataBreed.breed]);
 
   // TODO: DESENVOLVER OS CARDS PARA VISUALIZAÇÃO DAS IMAGENS
@@ -47,7 +55,8 @@ const Home: React.FC = () => {
       <div id="dark-screen" />
       <div className="container-home">
         <div>
-          <h1>HELLO, YOU ARE LOGUED!</h1>
+          <h1>Bem vindo ao Dog Breed System!</h1>
+          <h2>Escolhas uma das opções abaixo para visualizar os doguinhos!!</h2>
         </div>
         <div>
           {optionsBreed.map((option, key) => (
@@ -58,10 +67,14 @@ const Home: React.FC = () => {
               value={option}
               onClick={(e) => setDataBreed({ breed: e.currentTarget.value })}
             >
-              {option}
+              {option[0].toUpperCase() + option.substring(1)}
             </button>
           ))}
-          <button type="button" className="nav-button" onClick={handleLogout}>
+          <button
+            type="button"
+            className="nav-button logout"
+            onClick={handleLogout}
+          >
             Sair
           </button>
         </div>
