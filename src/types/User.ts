@@ -1,17 +1,23 @@
 export type UserType = {
-  email?: string;
-  _id: string;
+  email: string;
   token: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: 0;
+};
+
+export type ResType = {
+  user: {
+    _id: string;
+    token: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
 };
 
 export type UserContextType = {
-  currentUser?: UserType | null;
-  authLoading?: boolean;
-  setCurrentUser?: (user: UserType) => void;
-  checkLogin?: () => void;
-  setAuthLoading?: (isLoading: boolean) => void;
-  handleLogout?: () => void;
+  currentUser: UserType;
+  setCurrentUser: (user: UserType) => void;
+  authLoading: boolean;
+  setAuthLoading: (isLoading: boolean) => void;
+  checkLogin: (mess?: boolean) => void;
+  handleLogout: () => void;
 };

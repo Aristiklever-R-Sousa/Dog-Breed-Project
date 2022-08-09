@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import Client from "../../common/api";
 import Card from "../../components/Card";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
 
 import "./style.scss";
 
@@ -11,25 +12,13 @@ type ResponseType = {
 };
 
 const Home: React.FC = () => {
+  const { checkLogin, handleLogout } = useContext(CurrentUserContext);
   const token = localStorage.getItem("dog_breed_token") || "";
-  const navigate = useNavigate();
 
   const [dataBreed, setDataBreed] = useState<ResponseType>({
     breed: "",
   });
   const optionsBreed = ["chihuahua", "husky", "pug", "labrador"];
-
-  const handleLogin = () => {
-    if (!token) {
-      alert("Entre no sistema primeito!");
-      navigate("/login");
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("dog_breed_token");
-    navigate("/login");
-  };
 
   const handleBreed = () => {
     Client.get("/list", {
@@ -41,14 +30,11 @@ const Home: React.FC = () => {
       },
     }).then((res: { data: ResponseType }) => {
       setDataBreed({ ...dataBreed, list: res.data.list });
-      // console.log(dataBreed);
     });
   };
 
-  useEffect(handleLogin, [token]);
+  useEffect(() => checkLogin(true), [token]);
   useEffect(handleBreed, [dataBreed.breed]);
-
-  // TODO: DESENVOLVER OS CARDS PARA VISUALIZAÇÃO DAS IMAGENS
 
   return (
     <>

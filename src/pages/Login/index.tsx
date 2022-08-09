@@ -1,63 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Client from "../../common/api";
-// import { CurrentUserContext } from "../../context/CurrentUserContext";
-import { UserType } from "../../types/User";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
 
 import "./style.scss";
 import imageLoad from "../../assets/react.svg";
+import Client from "../../common/api";
+import { ResType } from "../../types/User";
 
 const Login: React.FC = () => {
-  const token = localStorage.getItem("dog_breed_token");
+  // const token = localStorage.getItem("dog_breed_token");
 
   const navigate = useNavigate();
-  // const { setCurrentUser } = useContext(CurrentUserContext);
+  const { authLoading, setAuthLoading, setCurrentUser, checkLogin } =
+    useContext(CurrentUserContext);
 
   const [email, setEmail] = useState<string>("");
-  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
-  const handleError = (mess: string) => {
-    alert(mess);
-    setIsSubmiting(false);
-  };
+  const handleError = (mess: string) => alert(mess);
 
-  const handleRequisition = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmiting(true);
-
+  const authenticate = () => {
+    setAuthLoading(true);
     Client.post("/register", null, {
       headers: {
         email,
       },
     })
-      .then((res: { data: { user: UserType } }) => {
+      .then((res: { data: ResType }) => {
         const { user } = res.data;
-
-        console.log(user, "IN REQUISITION");
+        setAuthLoading(false);
 
         if (user) {
-          // if (setCurrentUser) setCurrentUser(user);
-          // else console.log("CurrentUser Indefined");
+          setCurrentUser({ email, token: user.token });
           // STORING THE TOKEN RETURNED FOR THE ENDPOINT
           localStorage.setItem("dog_breed_token", user.token);
-
-          setIsSubmiting(false);
           navigate("/dogList");
-        } else handleError("An error ocurred");
+        } else handleError("Un error ocurried in checkLogin...");
       })
       .catch((err) => {
         handleError("An erro ocurred (log in console).");
         console.log(err);
-        setIsSubmiting(false);
+      })
+      .finally(() => {
+        setAuthLoading(false);
       });
   };
 
-  const checkLogin = () => {
-    if (token) navigate("/dogList");
+  const handleRequisition = (e: React.FormEvent) => {
+    e.preventDefault();
+    checkLogin();
+    authenticate();
   };
 
-  useEffect(checkLogin, [token]);
+  useEffect(() => console.log({ authLoading }), [authLoading]);
 
   return (
     <div className="container">
@@ -84,7 +79,7 @@ const Login: React.FC = () => {
           </div>
         </fieldset>
       </form>
-      {isSubmiting && (
+      {authLoading && (
         <div className="loading-box">
           <img src={imageLoad} alt="Loading" />
         </div>

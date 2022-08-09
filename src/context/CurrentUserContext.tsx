@@ -1,65 +1,49 @@
-/* eslint-disable react/prefer-stateless-function */
-import React, { useState, useEffect, useMemo } from "react";
-import { UserContextType, UserType } from "../types/User";
-import Client from "../common/api";
+import React, { useState, createContext, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-const CurrentUserContext = React.createContext<UserContextType>({});
+import { UserContextType, UserType } from "../types/User";
+
+const CurrentUserContext = createContext<UserContextType>(null!);
+CurrentUserContext.displayName = "UserContext";
 
 type ProviderProps = {
   children: React.ReactNode;
 };
 
 const CurrentUserProvider: React.FC<ProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<UserType | null>();
+  const navigate = useNavigate();
+
+  const [currentUser, setCurrentUser] = useState<UserType>({
+    email: "",
+    token: "",
+  });
+
   const [authLoading, setAuthLoading] = useState(false);
 
-  const checkLogin = () => {
-    const token = localStorage.getItem("dog_breed_token");
-    setAuthLoading(true);
-
-    if (token) {
-      // REDIRECT FOR NEXT PAGE
-    } else {
-      Client.post("/register", null, {
-        headers: {
-          email: "kleversousa13@gmail.com",
-        },
-      }).then((res: { data: { user: UserType } }) => {
-        const { user } = res.data;
-        console.log(user, "IN CHECK");
-        setAuthLoading(false);
-
-        if (user) {
-          setCurrentUser(user);
-          // STORING THE TOKEN RETURNED FOR THE ENDPOINT
-          localStorage.setItem("dog_breed_token", user.token);
-        }
-      });
-
-      setAuthLoading(false);
+  const checkLogin = (mess: boolean = false) => {
+    if (currentUser.email === "") {
+      if (mess) alert("Entre no sistema para poder acessar essa área.");
+      navigate("/login");
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("dog_breed_token");
-    setCurrentUser(null);
+    setCurrentUser({ email: "", token: "" });
+    navigate("/login");
   };
 
   const stateValues = useMemo(
     () => ({
       currentUser,
       setCurrentUser,
-      checkLogin,
-      setAuthLoading,
       authLoading,
+      setAuthLoading,
+      checkLogin,
       handleLogout,
     }),
-    []
+    [currentUser, authLoading]
   );
-
-  useEffect(() => {
-    checkLogin();
-  }, []);
 
   return (
     <CurrentUserContext.Provider value={stateValues}>
