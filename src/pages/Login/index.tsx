@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { CurrentUserContext } from "../../context/CurrentUserContext";
@@ -9,8 +9,6 @@ import Client from "../../common/api";
 import { ResType } from "../../types/User";
 
 const Login: React.FC = () => {
-  // const token = localStorage.getItem("dog_breed_token");
-
   const navigate = useNavigate();
   const { authLoading, setAuthLoading, setCurrentUser, checkLogin } =
     useContext(CurrentUserContext);
@@ -19,9 +17,8 @@ const Login: React.FC = () => {
 
   const handleError = (mess: string) => alert(mess);
 
-  const authenticate = () => {
-    setAuthLoading(true);
-    Client.post("/register", null, {
+  const authenticate = async () => {
+    await Client.post("/register", null, {
       headers: {
         email,
       },
@@ -35,7 +32,7 @@ const Login: React.FC = () => {
           // STORING THE TOKEN RETURNED FOR THE ENDPOINT
           localStorage.setItem("dog_breed_token", user.token);
           navigate("/dogList");
-        } else handleError("Un error ocurried in checkLogin...");
+        } else handleError("Un error ocurried in the API return data...");
       })
       .catch((err) => {
         handleError("An erro ocurred (log in console).");
@@ -46,25 +43,24 @@ const Login: React.FC = () => {
       });
   };
 
-  const handleRequisition = (e: React.FormEvent) => {
+  const handleRequisition = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthLoading(true);
     checkLogin();
-    authenticate();
+    await authenticate();
   };
-
-  useEffect(() => console.log({ authLoading }), [authLoading]);
 
   return (
     <div className="container">
       <form method="POST" onSubmit={handleRequisition}>
         <fieldset>
-          {/* <legend>Formulário aqui</legend> */}
           <div className="form-content">
             <h2>Entrar</h2>
             <div className="box-element">
               <label htmlFor="email">Email</label>
               <br />
               <input
+                data-testid="email"
                 type="email"
                 id="email"
                 className="email"
@@ -72,7 +68,12 @@ const Login: React.FC = () => {
               />
             </div>
             <div className="box-element">
-              <button type="submit" value="Entrar" className="nav-button">
+              <button
+                data-testid="button"
+                type="submit"
+                value="Entrar"
+                className="nav-button"
+              >
                 Entrar
               </button>
             </div>
